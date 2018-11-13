@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import swt.project.db.ExchangeWithDB;
 import swt.project.dictionary.Dictionary;
 import swt.project.utils.Utils;
 
@@ -19,11 +20,12 @@ public class AddWordWindow {
 	private ListWindow listWords;
 	private Dictionary dictionary;
 	private MessageBox messageBox;
+	private ExchangeWithDB exchangeWithDB;
 
-
-	public AddWordWindow(ListWindow listWords, Dictionary dictionary) {
+	public AddWordWindow(ListWindow listWords, Dictionary dictionary, ExchangeWithDB exchangeWithDB) {
 		this.listWords = listWords;
 		this.dictionary = dictionary;
+		this.exchangeWithDB = exchangeWithDB;
 	}
 
 	private void initAddWordWindow(Shell addWordshell) {
@@ -57,6 +59,7 @@ public class AddWordWindow {
 		addWordButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				exchangeWithDB.putToDB(addWord.getText(), addTranslate.getText());
 				dictionary.addWordToSupportDict(Utils.concatString(addWord.getText(), addTranslate.getText()), addWord.getText());
 				dictionary.addWord(addWord.getText(), addTranslate.getText());
 				try {

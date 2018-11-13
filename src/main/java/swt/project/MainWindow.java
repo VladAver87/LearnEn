@@ -10,13 +10,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import swt.project.db.ExchangeWithDB;
 import swt.project.dictionary.Dictionary;
 
 public class MainWindow {
 
 	private final Shell shell;
 	private Dictionary dictionary = new Dictionary();
-	
+	private ExchangeWithDB exchangeWithDB = new ExchangeWithDB();
 	public MainWindow(Shell shell) {
 		this.shell = shell;
 	}
@@ -43,7 +44,7 @@ public class MainWindow {
 						return;
 					}
 				}
-				new ListWindow(dictionary).open();				
+				new ListWindow(dictionary, exchangeWithDB).open();				
 			}
 		});
 

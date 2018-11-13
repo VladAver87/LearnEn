@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
+import swt.project.db.ExchangeWithDB;
 import swt.project.dictionary.Dictionary;
 
 
@@ -23,9 +24,11 @@ public class ListWindow {
 	private Shell listshell = new Shell(SWT.CLOSE);
 	private List listWords = new List(listshell, SWT.MULTI | SWT.V_SCROLL);
 	private Dictionary dictionary;
+	private ExchangeWithDB exchangeWithDB;
 
-	public ListWindow(Dictionary dictionary) {
+	public ListWindow(Dictionary dictionary, ExchangeWithDB exchangeWithDB) {
 		this.dictionary = dictionary;
+		this.exchangeWithDB = exchangeWithDB;
 	}
 
 	public List getListWords() {
@@ -47,6 +50,7 @@ public class ListWindow {
 			wordToDel = listWords.getItem(selectedItems[i]);			
 			String tmp = dictionary.showSupportDict().get(wordToDel);
 				dictionary.removeWord(tmp);
+				exchangeWithDB.delFromDB(tmp);
 			}			
 		}
 		
@@ -77,7 +81,7 @@ public class ListWindow {
 					return;
 				}
 			}
-				new AddWordWindow(ListWindow.this,dictionary).open();
+				new AddWordWindow(ListWindow.this,dictionary, exchangeWithDB).open();
 			}
 		});
 
