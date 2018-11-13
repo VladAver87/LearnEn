@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import swt.project.dictionary.Dictionary;
+import swt.project.utils.Utils;
 
 public class AddWordWindow {
 	
@@ -56,11 +57,11 @@ public class AddWordWindow {
 		addWordButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				dictionary.addWordToSupportDict(addWord.getText() + " - " + addTranslate.getText(), addWord.getText());
+				dictionary.addWordToSupportDict(Utils.concatString(addWord.getText(), addTranslate.getText()), addWord.getText());
 				dictionary.addWord(addWord.getText(), addTranslate.getText());
 				try {
-					if (listWords.getListWords().indexOf(addWord.getText() + " - " + addTranslate.getText()) == -1) {
-						listWords.getListWords().add(addWord.getText() + " - " + addTranslate.getText());					
+					if (listWords.getListWords().indexOf(Utils.concatString(addWord.getText(), addTranslate.getText())) == -1) {
+						listWords.getListWords().add(Utils.concatString(addWord.getText(), addTranslate.getText()));					
 					} else
 						messageBox = new MessageBox(addWordshell);
 						messageBox.setMessage("this one is already add");
