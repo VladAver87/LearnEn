@@ -16,7 +16,6 @@ public class InDBDictionaryLoader implements IDictionaryLoader {
 
 		try (FileInputStream in = new FileInputStream("db_connect.properties")) {
 			props.load(in);
-			in.close();
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -40,8 +39,7 @@ public class InDBDictionaryLoader implements IDictionaryLoader {
 			ResultSet res = st.executeQuery("SELECT word, translate FROM DICT_TABLE");
 			while (res.next()) {
 				dict.put(res.getString("word"), res.getString("translate"));
-			}
-			connect.close();
+			}			
 		} catch (SQLException ex) {
 			System.out.println("no connect");
 		}

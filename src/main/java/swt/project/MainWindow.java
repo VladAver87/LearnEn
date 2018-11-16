@@ -38,7 +38,6 @@ public class MainWindow {
 
 		try (FileInputStream in = new FileInputStream("db_connect.properties")) {
 			props.load(in);
-			in.close();
 		} catch (IOException e) {
 
 			MessageBox messageBox = new MessageBox(shell);

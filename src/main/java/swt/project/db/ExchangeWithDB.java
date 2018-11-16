@@ -20,8 +20,7 @@ public class ExchangeWithDB implements IExchangeWithDB {
 		Properties props = new Properties();
 
 		try (FileInputStream in = new FileInputStream("db_connect.properties")) {
-			props.load(in);
-			in.close();
+			props.load(in);			
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -58,7 +57,6 @@ public class ExchangeWithDB implements IExchangeWithDB {
 
 		try (FileInputStream in = new FileInputStream("db_connect.properties")) {
 			props.load(in);
-			in.close();
 		} catch (IOException e) {
 
 			e.printStackTrace();
