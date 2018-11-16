@@ -14,7 +14,7 @@ public class InDBDictionaryLoader implements IDictionaryLoader {
 		Map<String, String> dict = new HashMap<String, String>();
 		Properties props = new Properties();
 
-		try (FileInputStream in = new FileInputStream("db_connect.txt")) {
+		try (FileInputStream in = new FileInputStream("db_connect.properties")) {
 			props.load(in);
 			in.close();
 		} catch (IOException e) {

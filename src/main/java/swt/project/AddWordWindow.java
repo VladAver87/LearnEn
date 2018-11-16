@@ -15,7 +15,7 @@ import swt.project.dictionary.Dictionary;
 import swt.project.utils.Utils;
 
 public class AddWordWindow {
-	
+
 	private Shell addWordshell = new Shell(SWT.CLOSE);
 	private ListWindow listWords;
 	private Dictionary dictionary;
@@ -59,19 +59,21 @@ public class AddWordWindow {
 		addWordButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				exchangeWithDB.putToDB(addWord.getText(), addTranslate.getText());
-				dictionary.addWordToSupportDict(Utils.concatString(addWord.getText(), addTranslate.getText()), addWord.getText());
-				dictionary.addWord(addWord.getText(), addTranslate.getText());
-				try {
-					if (listWords.getListWords().indexOf(Utils.concatString(addWord.getText(), addTranslate.getText())) == -1) {
-						listWords.getListWords().add(Utils.concatString(addWord.getText(), addTranslate.getText()));					
-					} else
+				
+					if (listWords.allWordsInListWindow(listWords.getListWords()).contains(addWord.getText())) {
 						messageBox = new MessageBox(addWordshell);
 						messageBox.setMessage("this one is already add");
-						messageBox.open();		
-					} catch (NullPointerException ex) {
+						messageBox.open();
 						
-					}
+					}else 
+					
+						listWords.getListWords().add(Utils.concatString(addWord.getText(), addTranslate.getText()));
+						exchangeWithDB.putToDB(addWord.getText(), addTranslate.getText());
+						dictionary.addWordToSupportDict(Utils.concatString(addWord.getText(), addTranslate.getText()),
+							addWord.getText());
+						dictionary.addWord(addWord.getText(), addTranslate.getText());
+					
+				 
 			}
 		});
 	}

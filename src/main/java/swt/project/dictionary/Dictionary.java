@@ -1,9 +1,10 @@
 package swt.project.dictionary;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import swt.project.utils.Utils;
 
 public class Dictionary implements IDictionary {
 
@@ -19,14 +20,14 @@ public class Dictionary implements IDictionary {
 	private Map<String, String> putWordsToSupportDict() {
 		supportDict = new HashMap<>();
 		for (Entry<String, String> entry : dict.entrySet()) {
-			supportDict.put(entry.getKey() + " - " + entry.getValue(), entry.getKey());
+			supportDict.put(Utils.concatString(entry.getKey() , entry.getValue()), entry.getKey());
 		}
 		return supportDict;		
 	}
 	
-	public  Map<String, String> showSupportDict(){
-		return supportDict;
-		
+	public String getWordToDel(String value) {
+		String key = supportDict.get(value);
+		return key;
 	}
 	
 	public void addWordToSupportDict(String word, String translate) {
@@ -44,17 +45,6 @@ public class Dictionary implements IDictionary {
 	public void removeWord(String word) {
 		dict.remove(word);
 
-	}
-
-	@Override
-	public Map<String, String> chooseWords(List<String> listWords) {
-		Map<String, String> dictFilter = new HashMap<String, String>();
-		for (String s : listWords) {
-			if (dict.containsKey(s)) {
-				dictFilter.put(s, dict.get(s));
-			}
-		}
-		return dictFilter;
 	}
 	
 	@Override

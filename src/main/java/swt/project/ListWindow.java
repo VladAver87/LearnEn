@@ -1,6 +1,7 @@
 package swt.project;
 
 
+import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
@@ -15,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import swt.project.db.ExchangeWithDB;
 import swt.project.dictionary.Dictionary;
+import swt.project.utils.Utils;
 
 
 public class ListWindow {
@@ -38,21 +40,34 @@ public class ListWindow {
 	private void wordsFromDictToList(List listWords) {
 		if (listWords != null) {
 		for (Entry<String, String> entry : dictionary.showAllWords().entrySet()) {
-			listWords.add(entry.getKey() + " - " + entry.getValue());
+			listWords.add(Utils.concatString(entry.getKey() , entry.getValue()));
 			}
 		}	
-	}	
+	}					
 	
 	private void removeFromDict(){
+		String tmp = null;
 		String wordToDel;
 		selectedItems = listWords.getSelectionIndices();			
 		for (int i = 0 ; i < selectedItems.length; i++) {			
 			wordToDel = listWords.getItem(selectedItems[i]);			
-			String tmp = dictionary.showSupportDict().get(wordToDel);
-				dictionary.removeWord(tmp);
-				exchangeWithDB.delFromDB(tmp);
-			}			
+			tmp = dictionary.getWordToDel(wordToDel);	
+			dictionary.removeWord(tmp);
+			exchangeWithDB.delFromDB(tmp);
+			}	
 		}
+	
+	public ArrayList<String> allWordsInListWindow(List listWords){
+		ArrayList<String> list = new ArrayList<>();
+		String[] allwords = listWords.getItems();
+		for (String s : allwords) {
+			String word = dictionary.getWordToDel(s);
+			list.add(word);
+		}
+		
+		return list;
+		
+	}
 		
 	private List init() {
 		Font listWordsfont = new Font(null, "Arial", 14, SWT.NORMAL);
@@ -92,12 +107,11 @@ public class ListWindow {
 //		delButton.setEnabled(selectionIndex != -1);
 		delButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e) {	
 				removeFromDict();
 				if (listWords != null) {
 					listWords.remove(selectedItems);									
-					}
-				
+					}	
 			}
 		});
 		return listWords;
