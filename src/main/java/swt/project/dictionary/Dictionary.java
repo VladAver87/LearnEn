@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import swt.project.db.DBConnector;
+import swt.project.db.IWordsDAO;
+import swt.project.db.WordsDAO;
 import swt.project.utils.Utils;
 
 public class Dictionary implements IDictionary {
@@ -11,9 +14,8 @@ public class Dictionary implements IDictionary {
 	private Map<String, String> dict;
 	private Map<String, String> supportDict;
 	
-	public Dictionary() {
-		IDictionaryLoader loader = new InDBDictionaryLoader();
-		this.dict = loader.load();
+	public Dictionary(DBConnector dbconnector, WordsDAO exchangeWithDB) {
+		this.dict = exchangeWithDB.load();
 		this.supportDict = putWordsToSupportDict();
 	}
 	

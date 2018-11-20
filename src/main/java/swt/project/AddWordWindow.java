@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import swt.project.db.ExchangeWithDB;
+import swt.project.db.WordsDAO;
 import swt.project.dictionary.Dictionary;
 import swt.project.utils.Utils;
 
@@ -20,9 +20,9 @@ public class AddWordWindow {
 	private ListWindow listWords;
 	private Dictionary dictionary;
 	private MessageBox messageBox;
-	private ExchangeWithDB exchangeWithDB;
+	private WordsDAO exchangeWithDB;
 
-	public AddWordWindow(ListWindow listWords, Dictionary dictionary, ExchangeWithDB exchangeWithDB) {
+	public AddWordWindow(ListWindow listWords, Dictionary dictionary, WordsDAO exchangeWithDB) {
 		this.listWords = listWords;
 		this.dictionary = dictionary;
 		this.exchangeWithDB = exchangeWithDB;

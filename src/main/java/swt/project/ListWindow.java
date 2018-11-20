@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
-import swt.project.db.ExchangeWithDB;
+import swt.project.db.WordsDAO;
 import swt.project.dictionary.Dictionary;
 import swt.project.utils.Utils;
 
@@ -26,9 +26,9 @@ public class ListWindow {
 	private Shell listshell = new Shell(SWT.CLOSE);
 	private List listWords = new List(listshell, SWT.MULTI | SWT.V_SCROLL);
 	private Dictionary dictionary;
-	private ExchangeWithDB exchangeWithDB;
+	private WordsDAO exchangeWithDB;
 
-	public ListWindow(Dictionary dictionary, ExchangeWithDB exchangeWithDB) {
+	public ListWindow(Dictionary dictionary, WordsDAO exchangeWithDB) {
 		this.dictionary = dictionary;
 		this.exchangeWithDB = exchangeWithDB;
 	}
