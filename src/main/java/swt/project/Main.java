@@ -12,7 +12,7 @@ public class Main {
 		MainWindow mainWindow = new MainWindow(shell);
 		mainWindow.init();
 		shell.setText("LearnWords");
-		shell.setSize(400, 450);
+		shell.setSize(400, 250);
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!localDisplay.readAndDispatch()) {
