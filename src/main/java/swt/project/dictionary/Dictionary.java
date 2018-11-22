@@ -1,8 +1,12 @@
 package swt.project.dictionary;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
+
 
 import swt.project.db.DBConnector;
 import swt.project.db.IWordsDAO;
@@ -51,8 +55,20 @@ public class Dictionary implements IDictionary {
 	
 	@Override
 	public Map<String, String> showAllWords() {
-
 		return dict;
+		
+	}
+	
+	private List<String> DictToList(){
+		List<String> wordList = new ArrayList<String>(dict.keySet());
+		return wordList;
+		
+	}
+	
+	public String getNextWord(int x) {
+		String nextWord = DictToList().get(x);
+		return nextWord;
+		
 	}
 
 }

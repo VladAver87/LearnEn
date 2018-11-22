@@ -71,8 +71,7 @@ public class AddWordWindow {
 						exchangeWithDB.putToDB(addWord.getText(), addTranslate.getText());
 						dictionary.addWordToSupportDict(Utils.concatString(addWord.getText(), addTranslate.getText()),
 							addWord.getText());
-						dictionary.addWord(addWord.getText(), addTranslate.getText());
-					
+						dictionary.addWord(addWord.getText(), addTranslate.getText());				
 				 
 			}
 		});

@@ -32,7 +32,22 @@ public class MainWindow {
 		learnButton.setLocation(50, 160);
 		learnButton.setText("Learn Words");
 		learnButton.setFont(mainWindowButtonsFont);
-
+		learnButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Shell[] shells = Display.getCurrent().getShells();
+				for (Shell shell : shells) {
+					String data = (String) shell.getData();
+					if (data != null && data.equals("learnWindow")) {
+						shell.setFocus();
+						return;
+					}
+				}
+				new LearnWindow(dictionary).open();
+			
+			}
+		});
+		
 		Button allWordsButton = new Button(shell, SWT.PUSH);
 		allWordsButton.setSize(120, 45);
 		allWordsButton.setLocation(240, 160);
