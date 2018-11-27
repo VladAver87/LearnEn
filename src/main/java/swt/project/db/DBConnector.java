@@ -9,15 +9,19 @@ import java.util.Properties;
 
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class DBConnector {
 	private String url;
 	private String username;
 	private String password;
+	private Shell connectShell = new Shell();
+	private final Logger log = LoggerFactory.getLogger(DBConnector.class);
 	
 	public DBConnector() {
-		getConnectProperties(null);
+		getConnectProperties(connectShell);
 	}
 	
 	public String getUrl() {
@@ -40,7 +44,7 @@ public class DBConnector {
 		try (FileInputStream in = new FileInputStream("db_connect.properties")) {
 			props.load(in);
 		} catch (IOException e) {
-
+			log.debug("Not found db_connect.properties file");
 			MessageBox messageBox = new MessageBox(shell);
 			messageBox.setMessage("Unable to read file 'db_connect.properties' "
 					+ "\n Please, check for the file 'db_connect.properties' in program directory");
@@ -57,13 +61,14 @@ public class DBConnector {
 			try {
 				Class.forName(driver);
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				log.debug("JDBC Driver not found");
 			}
 		}
 
 		try (Connection connect = DriverManager.getConnection(url, username, password)) {			
 			
 		} catch (SQLException ex) {
+			log.debug("Unable to connect to DB");;
 			MessageBox messageBox = new MessageBox(shell);
 			messageBox.setMessage("Unable to connect to database"
 					+ "\n Please, check your connection settings in 'db_connect.properties'");

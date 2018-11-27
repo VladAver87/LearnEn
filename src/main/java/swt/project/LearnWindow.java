@@ -1,6 +1,8 @@
 package swt.project;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -16,18 +18,14 @@ import swt.project.utils.Utils;
 public class LearnWindow {
 	private Shell learnWindowShell = new Shell(SWT.CLOSE);
 	private Dictionary dictionary;
-	private int counter = 0;
+	private int counterAllWords;
+	private int counterRightAnswer;
 	
 	
 	public LearnWindow(Dictionary dictionary) {
 		this.dictionary = dictionary;
 
-	}
-	
-	private void disabledAll() {
-		
-	}
-	
+	}	
 	
 	private void init() {
 		Label engWord = new Label(learnWindowShell, SWT.CENTER);
@@ -58,7 +56,31 @@ public class LearnWindow {
 		translateWord.setText("Type Translate");
 		translateWord.setLocation(90, 155);
 		translateWord.setSize(200, 40);
+		translateWord.setEnabled(false);
+		translateWord.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				translateWord.setText("");
+			}
+		});
 		
+		Button showResultButton = new Button(learnWindowShell, SWT.PUSH);
+		showResultButton.setSize(120, 45);
+		showResultButton.setLocation(130, 250);
+		showResultButton.setText("SHOW RESULT");
+		showResultButton.setEnabled(false);
+		showResultButton.setVisible(false);
+		showResultButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				showResultButton.setVisible(false);
+				MessageBox messageBox = new MessageBox(learnWindowShell);
+				messageBox.setMessage("You have" + " " + counterRightAnswer + " " 
+				+ "of" + " " + String.valueOf(dictionary.showAllWords().size()) + " " + "right answers" );
+				messageBox.open();
+			}
+		});
+		Button startButton = new Button(learnWindowShell, SWT.PUSH);
 		Button nextButton = new Button(learnWindowShell, SWT.PUSH);
 		nextButton.setSize(120, 45);
 		nextButton.setLocation(130, 250);
@@ -66,31 +88,46 @@ public class LearnWindow {
 		nextButton.setEnabled(false);
 		nextButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {	
-				counter = counter + 1;
-				if (counter < dictionary.showAllWords().size()) {
-					countLabel.setText(String.valueOf(counter + 1));
-					engWord.setText(dictionary.getNextWord(counter));
-				} else 
-					nextButton.setText("SHOW RESULT");
-					engWord.setEnabled(false);
+			public void widgetSelected(SelectionEvent e) {				
+				String temp = dictionary.showAllWords().get(engWord.getText());	
+				if (temp.equals(translateWord.getText())) {
+					counterRightAnswer++;
+				}
+				counterAllWords = counterAllWords + 1;
+				translateWord.setFocus();
+				if (counterAllWords < dictionary.showAllWords().size()) {
+					countLabel.setText(String.valueOf(counterAllWords + 1));
+					engWord.setText(dictionary.getNextWord(counterAllWords));				
+					
+				} 
+					else 
+				{
+					showResultButton.setVisible(true);
+					showResultButton.setEnabled(true);	
+					startButton.setEnabled(true);
 					translateWord.setEnabled(false);
-					//открыть окно с резалтом
+					engWord.setText(" ");
+					nextButton.setEnabled(false);
+				}
 			}
 		});
 		
 		
-		Button startButton = new Button(learnWindowShell, SWT.PUSH);
 		startButton.setSize(120, 45);
 		startButton.setLocation(35, 20);
 		startButton.setText("START");
 		startButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				engWord.setText(dictionary.getNextWord(counter));	
+				counterAllWords = 0;
+				counterRightAnswer = 0;
+				engWord.setText(dictionary.getNextWord(counterAllWords));
+				translateWord.setEnabled(true);
+				translateWord.setFocus();
 				startButton.setEnabled(false);
 				nextButton.setEnabled(true);
-				countLabel.setText(String.valueOf(counter + 1));
+				nextButton.setVisible(true);
+				countLabel.setText(String.valueOf(counterAllWords + 1));
 			}
 		});
 		

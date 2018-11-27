@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import swt.project.db.WordsDAO;
 import swt.project.dictionary.Dictionary;
 import swt.project.utils.Utils;
 
@@ -20,13 +19,13 @@ public class AddWordWindow {
 	private ListWindow listWords;
 	private Dictionary dictionary;
 	private MessageBox messageBox;
-	private WordsDAO exchangeWithDB;
 
-	public AddWordWindow(ListWindow listWords, Dictionary dictionary, WordsDAO exchangeWithDB) {
+	public AddWordWindow(ListWindow listWords, Dictionary dictionary) {
 		this.listWords = listWords;
 		this.dictionary = dictionary;
-		this.exchangeWithDB = exchangeWithDB;
 	}
+	
+
 
 	private void initAddWordWindow(Shell addWordshell) {
 		Text addWord = new Text(addWordshell, SWT.BORDER);
@@ -66,13 +65,12 @@ public class AddWordWindow {
 						messageBox.open();
 						
 					}else 
-					
+					{				
 						listWords.getListWords().add(Utils.concatString(addWord.getText(), addTranslate.getText()));
-						exchangeWithDB.putToDB(addWord.getText(), addTranslate.getText());
-						dictionary.addWordToSupportDict(Utils.concatString(addWord.getText(), addTranslate.getText()),
-							addWord.getText());
-						dictionary.addWord(addWord.getText(), addTranslate.getText());				
-				 
+						dictionary.addWord(addWord.getText(), addTranslate.getText());
+						addWord.setFocus();
+						addTranslate.setText(" ");
+					}
 			}
 		});
 	}

@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 import swt.project.db.DBConnector;
 import swt.project.db.WordsDAO;
@@ -65,7 +64,7 @@ public class MainWindow {
 						return;
 					}
 				}
-				new ListWindow(dictionary, exchangeWithDB).open();
+				new ListWindow(dictionary).open();
 			}
 		});
 	}

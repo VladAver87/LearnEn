@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
-import swt.project.db.WordsDAO;
 import swt.project.dictionary.Dictionary;
 import swt.project.utils.Utils;
 
@@ -26,11 +25,9 @@ public class ListWindow {
 	private Shell listshell = new Shell(SWT.CLOSE);
 	private List listWords = new List(listshell, SWT.MULTI | SWT.V_SCROLL);
 	private Dictionary dictionary;
-	private WordsDAO exchangeWithDB;
 
-	public ListWindow(Dictionary dictionary, WordsDAO exchangeWithDB) {
-		this.dictionary = dictionary;
-		this.exchangeWithDB = exchangeWithDB;
+	public ListWindow(Dictionary dictionary) {
+		this.dictionary = dictionary;;
 	}
 
 	public List getListWords() {
@@ -52,9 +49,9 @@ public class ListWindow {
 		for (int i = 0 ; i < selectedItems.length; i++) {			
 			wordToDel = listWords.getItem(selectedItems[i]);			
 			tmp = dictionary.getWordToDel(wordToDel);	
-			dictionary.removeWord(tmp);
-			exchangeWithDB.delFromDB(tmp);
-			}	
+			dictionary.removeWord(tmp);		
+			}
+		listWords.remove(selectedItems);
 		}
 	
 	public ArrayList<String> allWordsInListWindow(List listWords){
@@ -96,7 +93,7 @@ public class ListWindow {
 					return;
 				}
 			}
-				new AddWordWindow(ListWindow.this,dictionary, exchangeWithDB).open();
+				new AddWordWindow(ListWindow.this,dictionary).open();
 			}
 		});
 
@@ -108,10 +105,7 @@ public class ListWindow {
 		delButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {	
-				removeFromDict();
-				if (listWords != null) {
-					listWords.remove(selectedItems);									
-					}	
+				removeFromDict();	
 			}
 		});
 		return listWords;

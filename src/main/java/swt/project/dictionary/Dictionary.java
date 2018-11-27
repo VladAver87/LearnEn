@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
+
 
 
 import swt.project.db.DBConnector;
-import swt.project.db.IWordsDAO;
 import swt.project.db.WordsDAO;
 import swt.project.utils.Utils;
 
@@ -17,10 +16,12 @@ public class Dictionary implements IDictionary {
 
 	private Map<String, String> dict;
 	private Map<String, String> supportDict;
+	private WordsDAO exchangeWithDB;
 	
 	public Dictionary(DBConnector dbconnector, WordsDAO exchangeWithDB) {
 		this.dict = exchangeWithDB.load();
 		this.supportDict = putWordsToSupportDict();
+		this.exchangeWithDB = exchangeWithDB;
 	}
 	
 	private Map<String, String> putWordsToSupportDict() {
@@ -44,13 +45,15 @@ public class Dictionary implements IDictionary {
 	@Override
 	public void addWord(String word, String translate) {
 		dict.put(word, translate);
-
+		supportDict.put(Utils.concatString(word, translate) , word);
+		exchangeWithDB.putToDB(word, translate);
 	}
 
 	@Override
 	public void removeWord(String word) {
 		dict.remove(word);
-
+		supportDict.values().remove(word);
+		exchangeWithDB.delFromDB(word);
 	}
 	
 	@Override
