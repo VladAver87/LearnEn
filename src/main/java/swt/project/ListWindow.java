@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
 import swt.project.dictionary.Dictionary;
+import swt.project.utils.SelectedWordsGetter;
 import swt.project.utils.Utils;
 
 
@@ -25,9 +26,11 @@ public class ListWindow {
 	private Shell listshell = new Shell(SWT.CLOSE);
 	private List listWords = new List(listshell, SWT.MULTI | SWT.V_SCROLL);
 	private Dictionary dictionary;
+	private SelectedWordsGetter selectedWordsGetter;
 
 	public ListWindow(Dictionary dictionary) {
-		this.dictionary = dictionary;;
+		this.dictionary = dictionary;
+		selectedWordsGetter = new SelectedWordsGetter(this, dictionary);
 	}
 
 	public List getListWords() {
@@ -43,12 +46,10 @@ public class ListWindow {
 	}					
 	
 	private void removeFromDict(){
-		String tmp = null;
-		String wordToDel;
 		selectedItems = listWords.getSelectionIndices();			
 		for (int i = 0 ; i < selectedItems.length; i++) {			
-			wordToDel = listWords.getItem(selectedItems[i]);			
-			tmp = dictionary.getWordToDel(wordToDel);	
+			String wordToDel = listWords.getItem(selectedItems[i]);			
+			String tmp = dictionary.getWordToDel(wordToDel);	
 			dictionary.removeWord(tmp);		
 			}
 		listWords.remove(selectedItems);
@@ -66,19 +67,25 @@ public class ListWindow {
 		
 	}
 		
-	private List init() {
+	private void init() {
+		Button addButton = new Button(listshell, SWT.PUSH);
+		Button delButton = new Button(listshell, SWT.PUSH);
+		Button learnSelectedButton = new Button(listshell, SWT.PUSH);
+		Button selectAllButton = new Button(listshell, SWT.PUSH);
 		Font listWordsfont = new Font(null, "Arial", 14, SWT.NORMAL);
-		listWords.setBounds(5, 5, 390, 695);
+		listWords.setBounds(5, 5, 390, 640);
 		listWords.setFont(listWordsfont);
-
 		listWords.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
+				if (selectionIndex != -1) {
+				delButton.setEnabled(true);
+				learnSelectedButton.setEnabled(true);
+				selectAllButton.setEnabled(true);
+				}
 			}
 		});
-
-		Button addButton = new Button(listshell, SWT.PUSH);
+		
 		addButton.setSize(110, 30);
 		addButton.setLocation(50, 715);
 		addButton.setText("Add Word");
@@ -96,19 +103,41 @@ public class ListWindow {
 				new AddWordWindow(ListWindow.this,dictionary).open();
 			}
 		});
-
-		Button delButton = new Button(listshell, SWT.PUSH);
+		
 		delButton.setSize(110, 30);
 		delButton.setLocation(250, 715);
 		delButton.setText("Delete Word");
-//		delButton.setEnabled(selectionIndex != -1);
+		delButton.setEnabled(false);
 		delButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {	
 				removeFromDict();	
 			}
 		});
-		return listWords;
+		
+		learnSelectedButton.setSize(110, 30);
+		learnSelectedButton.setLocation(50, 665);
+		learnSelectedButton.setText("Learn Selected");
+		learnSelectedButton.setEnabled(false);
+		learnSelectedButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {	
+				selectedWordsGetter.getSelectedWordsFromList();
+				new LearnWindow(dictionary, selectedWordsGetter).open();
+				listshell.setVisible(false);
+			}
+		});
+		
+		selectAllButton.setSize(110, 30);
+		selectAllButton.setLocation(250, 665);
+		selectAllButton.setText("Select all");
+		selectAllButton.setEnabled(false);
+		selectAllButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {	
+				listWords.selectAll();
+			}
+		});		
 
 	}
 
