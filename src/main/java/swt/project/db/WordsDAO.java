@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,7 @@ public class WordsDAO implements IWordsDAO {
 	
 	private DBConnector dbconnector;
 	private final Logger log = LoggerFactory.getLogger(WordsDAO.class);
+	private Shell dbErrorShell = new Shell();
 	
 	public WordsDAO (DBConnector dbconnector) {
 		this.dbconnector = dbconnector;
@@ -32,9 +36,12 @@ public class WordsDAO implements IWordsDAO {
 			st.setString(1, word);
 			st.setString(2, translate);
 			st.execute();
-			log.debug("Word {} add to dict", word);
+			log.info("Word {} add to dict", word);
 		} catch (SQLException ex) {
-			log.debug("add word error");
+			log.error("add word error", ex);
+			MessageBox messageBox = new MessageBox(dbErrorShell);
+			messageBox.setMessage("Unable to add word from DataBase");
+			messageBox.open();
 		}
 	}
 
@@ -46,9 +53,12 @@ public class WordsDAO implements IWordsDAO {
 			PreparedStatement st = connect.prepareStatement(sqlQuery);
 			st.setString(1, word);
 			st.execute();
-			log.debug("Word {} del from dict", word);
+			log.info("Word {} del from dict", word);
 		} catch (SQLException ex) {
-			log.debug("delete word error");
+			log.error("delete word error", ex);
+			MessageBox messageBox = new MessageBox(dbErrorShell);
+			messageBox.setMessage("Unable to delete word from DataBase");
+			messageBox.open();
 		}
 	}
 
@@ -62,9 +72,9 @@ public class WordsDAO implements IWordsDAO {
 			while (res.next()) {
 				dict.put(res.getString("word"), res.getString("translate"));
 			}	
-			log.debug("Dictionary is load");
+			log.info("Dictionary is load");
 		} catch (SQLException ex) {
-			log.debug("Dictionary is not load");
+			log.error("Dictionary is not load", ex);
 		}
 		return dict;
 	}

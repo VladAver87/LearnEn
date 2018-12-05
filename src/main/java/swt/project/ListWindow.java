@@ -81,7 +81,6 @@ public class ListWindow {
 				if (selectionIndex != -1) {
 				delButton.setEnabled(true);
 				learnSelectedButton.setEnabled(true);
-				selectAllButton.setEnabled(true);
 				}
 			}
 		});
@@ -131,11 +130,12 @@ public class ListWindow {
 		selectAllButton.setSize(110, 30);
 		selectAllButton.setLocation(250, 665);
 		selectAllButton.setText("Select all");
-		selectAllButton.setEnabled(false);
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {	
 				listWords.selectAll();
+				delButton.setEnabled(true);
+				learnSelectedButton.setEnabled(true);
 			}
 		});		
 

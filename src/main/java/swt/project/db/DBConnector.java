@@ -44,12 +44,12 @@ public class DBConnector {
 		try (FileInputStream in = new FileInputStream("db_connect.properties")) {
 			props.load(in);
 		} catch (IOException e) {
-			log.debug("Not found db_connect.properties file");
+			log.error("Not found db_connect.properties file", e);
 			MessageBox messageBox = new MessageBox(shell);
 			messageBox.setMessage("Unable to read file 'db_connect.properties' "
 					+ "\n Please, check for the file 'db_connect.properties' in program directory");
 			messageBox.open();
-			shell.dispose();
+			shell.close();
 		}
 
 		this.url = props.getProperty("jdbc.url");
@@ -61,19 +61,20 @@ public class DBConnector {
 			try {
 				Class.forName(driver);
 			} catch (ClassNotFoundException e) {
-				log.debug("JDBC Driver not found");
+				log.error("JDBC Driver not found", e);
+				shell.close();
 			}
 		}
 
 		try (Connection connect = DriverManager.getConnection(url, username, password)) {			
 			
 		} catch (SQLException ex) {
-			log.debug("Unable to connect to DB");;
+			log.error("Unable to connect to DB", ex);;
 			MessageBox messageBox = new MessageBox(shell);
 			messageBox.setMessage("Unable to connect to database"
 					+ "\n Please, check your connection settings in 'db_connect.properties'");
 			messageBox.open();
-			shell.dispose();	
+			shell.close();	
 		}
 	}
 

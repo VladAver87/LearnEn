@@ -55,7 +55,7 @@ public class LearnWindow {
 		countSumLabel.setLocation(300, 20);
 		countSumLabel.setSize(50, 30);
 		countSumLabel.setFont(learnWindowLabelFont);
-		countSumLabel.setText(String.valueOf(selectedWordsGetter.getSelectedWordsFromList().size()));	
+		countSumLabel.setText(String.valueOf(selectedWordsGetter.getSelectedList().size()));	
 		
 
 		Text translateWord = new Text(learnWindowShell, SWT.BORDER);
@@ -81,7 +81,7 @@ public class LearnWindow {
 				showResultButton.setVisible(false);
 				MessageBox messageBox = new MessageBox(learnWindowShell);
 				messageBox.setMessage("You have" + " " + counterRightAnswer + " " 
-					+ "of" + " " + String.valueOf(selectedWordsGetter.getSelectedWordsFromList().size()) + " " + "right answers" );				
+					+ "of" + " " + String.valueOf(selectedWordsGetter.getSelectedList().size()) + " " + "right answers" );				
 				messageBox.open();
 			}
 		});
@@ -99,10 +99,10 @@ public class LearnWindow {
 				}
 				counterAllWords = counterAllWords + 1;
 				translateWord.setFocus();
-				if (counterAllWords < selectedWordsGetter.getSelectedWordsFromList().size())      
+				if (counterAllWords < selectedWordsGetter.getSelectedList().size())      
 				{
 					countLabel.setText(String.valueOf(counterAllWords + 1));
-					engWord.setText(selectedWordsGetter.getSelectedWordsFromList().get(counterAllWords));
+					engWord.setText(selectedWordsGetter.getSelectedList().get(counterAllWords));
 				}
 					else 
 				{
@@ -125,7 +125,7 @@ public class LearnWindow {
 			public void widgetSelected(SelectionEvent e) {
 				counterAllWords = 0;
 				counterRightAnswer = 0;
-				engWord.setText(selectedWordsGetter.getSelectedWordsFromList().get(counterAllWords));
+				engWord.setText(selectedWordsGetter.getSelectedList().get(counterAllWords));
 				translateWord.setEnabled(true);
 				translateWord.setFocus();
 				startButton.setEnabled(false);

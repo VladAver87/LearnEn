@@ -10,22 +10,25 @@ public class SelectedWordsGetter {
 	
 	private ListWindow listWords;
 	private Dictionary dictionary;
+	private List<String> selectedWordsList = new ArrayList<>();
 	
 	public SelectedWordsGetter(ListWindow listWords, Dictionary dictionary) {
 		this.listWords = listWords;
 		this.dictionary = dictionary;
-		getSelectedWordsFromList();
+		
 	}
 	
-	public List<String> getSelectedWordsFromList() {
-		List<String> list = new ArrayList<>();
+	public List<String> getSelectedList(){
+		return selectedWordsList;
+	}
+	
+	public void getSelectedWordsFromList() {		
 		int[] selectedItems = listWords.getListWords().getSelectionIndices();			
 		for (int i = 0 ; i < selectedItems.length; i++) {			
 			String wordToPut = listWords.getListWords().getItem(selectedItems[i]);		
 			String tmp = dictionary.getWordToDel(wordToPut);
-			list.add(tmp);	
+			selectedWordsList.add(tmp);	
 			}
-		return list;
 	}
 	
 	
