@@ -1,6 +1,8 @@
 package swt.project;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -22,15 +24,24 @@ public class LearnWindow {
 	private int counterAllWords;
 	private int counterRightAnswer;
 	private SelectedWordsGetter selectedWordsGetter;
+	private ListWindow listWords;
 	
-	public LearnWindow(Dictionary dictionary, SelectedWordsGetter selectedWordsGetter) {
+	public LearnWindow(Dictionary dictionary, SelectedWordsGetter selectedWordsGetter, ListWindow listWords) {
 		this.dictionary = dictionary;
 		this.selectedWordsGetter = selectedWordsGetter;
+		this.listWords = listWords;
 	}	
 	
 	
 	
 	private void init() {
+		learnWindowShell.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				listWords.getListWords().getShell().open();
+			}
+		});
+		
 		Button showResultButton = new Button(learnWindowShell, SWT.PUSH);
 		Button startButton = new Button(learnWindowShell, SWT.PUSH);
 		Button nextButton = new Button(learnWindowShell, SWT.PUSH);

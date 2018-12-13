@@ -15,7 +15,7 @@ public class SelectedWordsGetter {
 	public SelectedWordsGetter(ListWindow listWords, Dictionary dictionary) {
 		this.listWords = listWords;
 		this.dictionary = dictionary;
-		
+
 	}
 	
 	public List<String> getSelectedList(){
@@ -30,7 +30,6 @@ public class SelectedWordsGetter {
 			selectedWordsList.add(tmp);	
 			}
 	}
-	
 	
 
 }

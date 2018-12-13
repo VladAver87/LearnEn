@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Shell;
 import swt.project.db.DBConnector;
 import swt.project.db.WordsDAO;
 import swt.project.dictionary.Dictionary;
+import swt.project.utils.SavedDictionaries;
 
 public class MainWindow {
 
@@ -19,6 +20,7 @@ public class MainWindow {
 	private DBConnector dbconnector = new DBConnector();
 	private WordsDAO exchangeWithDB = new WordsDAO(dbconnector);
 	private Dictionary dictionary = new Dictionary(dbconnector, exchangeWithDB);
+	private SavedDictionaries savedDictionaries = new SavedDictionaries(exchangeWithDB);
 
 	public MainWindow(Shell shell) {
 		this.shell = shell;
@@ -45,7 +47,7 @@ public class MainWindow {
 						return;
 					}
 				}
-				new ListWindow(dictionary).open();
+				new ListWindow(dictionary, savedDictionaries).open();
 			}
 		});
 	}
