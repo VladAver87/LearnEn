@@ -7,6 +7,7 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
@@ -20,14 +21,14 @@ import swt.project.utils.SelectedWordsGetter;
 
 public class LearnWindow {
 	private Shell learnWindowShell = new Shell(SWT.CLOSE);
-	private Dictionary dictionary;
+	private Dictionary dictionary = Dictionary.dictionary;
 	private int counterAllWords;
 	private int counterRightAnswer;
 	private SelectedWordsGetter selectedWordsGetter;
 	private ListWindow listWords;
 	
 	public LearnWindow(Dictionary dictionary, SelectedWordsGetter selectedWordsGetter, ListWindow listWords) {
-		this.dictionary = dictionary;
+
 		this.selectedWordsGetter = selectedWordsGetter;
 		this.listWords = listWords;
 	}	
@@ -38,7 +39,7 @@ public class LearnWindow {
 		learnWindowShell.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
-				listWords.getListWords().getShell().open();
+//				listWords.getListWords().getShell().open();
 			}
 		});
 		
@@ -46,7 +47,7 @@ public class LearnWindow {
 		Button startButton = new Button(learnWindowShell, SWT.PUSH);
 		Button nextButton = new Button(learnWindowShell, SWT.PUSH);
 		Label engWord = new Label(learnWindowShell, SWT.CENTER);
-		Font learnWindowLabelFont = new Font(null, "Tahoma", 16, SWT.NORMAL);		
+		Font learnWindowLabelFont = new Font(null, "Tahoma", 16, SWT.NORMAL);	
 		engWord.setLocation(90, 100);
 		engWord.setSize(200, 40);
 		engWord.setFont(learnWindowLabelFont);
@@ -105,7 +106,7 @@ public class LearnWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {				
 				String temp = dictionary.showAllWords().get(engWord.getText());	
-				if (temp.equals(translateWord.getText())) {
+				if (temp.equalsIgnoreCase(translateWord.getText())) {
 					counterRightAnswer++;
 				}
 				counterAllWords = counterAllWords + 1;

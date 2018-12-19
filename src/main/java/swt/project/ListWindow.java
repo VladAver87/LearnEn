@@ -24,15 +24,15 @@ public class ListWindow {
 	private int selectionIndex;
 	private Shell listshell = new Shell(SWT.CLOSE);
 	private List listWords = new List(listshell, SWT.MULTI | SWT.V_SCROLL);
-	private Dictionary dictionary;
+	private Dictionary dictionary = Dictionary.dictionary;
 	private SelectedWordsGetter selectedWordsGetter;
 	private SavedDictionaries savedDictionaries;
+	private SavedDictWindow savedDictWindow;
 
 	public ListWindow(Dictionary dictionary, SavedDictionaries savedDictionaries) {
-		this.dictionary = dictionary;
 		this.savedDictionaries = savedDictionaries;
-		selectedWordsGetter = new SelectedWordsGetter(this, dictionary);
-
+		selectedWordsGetter = new SelectedWordsGetter(this, dictionary, savedDictWindow, savedDictionaries);
+		
 	}
 
 	public List getListWords() {
@@ -71,7 +71,6 @@ public class ListWindow {
 
 	private void init() {
 		Button saveDictButton = new Button(listshell, SWT.PUSH);
-//		Button loadSavedDictButton = new Button(listshell, SWT.PUSH);
 		Button openSaveDictButton = new Button(listshell, SWT.PUSH);
 		Button addButton = new Button(listshell, SWT.PUSH);
 		Button delButton = new Button(listshell, SWT.PUSH);
@@ -159,7 +158,7 @@ public class ListWindow {
 						return;
 					}
 				}
-				new SavedDictWindow(savedDictionaries).open();
+				new SavedDictWindow(savedDictionaries, selectedWordsGetter).open();
 			}
 		});
 
@@ -181,17 +180,7 @@ public class ListWindow {
 				new SaveDictDialogWindow(savedDictionaries, selectedWordsGetter).open();
 			
 			}
-		});		
-
-//		loadSavedDictButton.setSize(110, 30);
-//		loadSavedDictButton.setLocation(250, 10);
-//		loadSavedDictButton.setText("load saved dict");
-//		loadSavedDictButton.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {	
-//				new LoadSavedDictWindow(saveDictDialogWindow).open();
-//			}
-//		});		
+		});			
 
 	}
 

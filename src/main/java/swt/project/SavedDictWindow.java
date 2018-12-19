@@ -8,7 +8,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
+import swt.project.dictionary.Dictionary;
 import swt.project.utils.SavedDictionaries;
+import swt.project.utils.SelectedWordsGetter;
 
 public class SavedDictWindow {
 
@@ -17,13 +19,27 @@ public class SavedDictWindow {
 	private List wordsInSavedDict = new List(savedDictShell, SWT.MULTI | SWT.V_SCROLL);
 	private SavedDictionaries savedDictionaries;
 	private int selectedItems;
+	private SelectedWordsGetter selectedWordsGetter;
+	private Dictionary dictionary = Dictionary.dictionary;
+	private ListWindow listWords;
 
-	public SavedDictWindow(SavedDictionaries savedDictionaries) {
+	public SavedDictWindow(SavedDictionaries savedDictionaries, SelectedWordsGetter selectedWordsGetter) {
 		this.savedDictionaries = savedDictionaries;
+		this.selectedWordsGetter = selectedWordsGetter;
+
+	}
+	
+	public Shell getSavedDictShell() {
+		return savedDictShell;
 	}
 
 	public List getListOfDict() {
 		return listOfDict;
+	}
+
+	private String getWordToAddFromList() {
+		selectedItems = listOfDict.getSelectionIndex();
+		return listOfDict.getItem(selectedItems);
 	}
 
 	private void putWordsToListOfDict() {
@@ -41,6 +57,7 @@ public class SavedDictWindow {
 
 	private void init() {
 		Button refreshButton = new Button(savedDictShell, SWT.PUSH);
+		Button learnDictButton = new Button(savedDictShell, SWT.PUSH);
 		Button showWordsButton = new Button(savedDictShell, SWT.PUSH);
 		Button backButton = new Button(savedDictShell, SWT.ARROW | SWT.LEFT);
 		Button delDictButton = new Button(savedDictShell, SWT.PUSH);
@@ -53,6 +70,7 @@ public class SavedDictWindow {
 				if (selectedItems != -1) {
 					delDictButton.setEnabled(true);
 					showWordsButton.setEnabled(true);
+					learnDictButton.setEnabled(true);
 				}
 			}
 		});
@@ -74,13 +92,30 @@ public class SavedDictWindow {
 		showWordsButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				selectedItems = listOfDict.getSelectionIndex();
-				String dictToDel = listOfDict.getItem(selectedItems);
-				for (String s : savedDictionaries.showWordsInSelectedDict(dictToDel)) {
+				for (String s : savedDictionaries.showWordsInSelectedDict(getWordToAddFromList())) {
 					wordsInSavedDict.add(s);
 				}
 				listOfDict.setVisible(false);
 				wordsInSavedDict.setVisible(true);
+				delDictButton.setEnabled(false);
+				showWordsButton.setEnabled(false);
+				learnDictButton.setEnabled(false);
+			}
+		});
+
+		learnDictButton.setSize(110, 30);
+		learnDictButton.setLocation(20, 470);
+		learnDictButton.setText("Learn Dict");
+		learnDictButton.setEnabled(false);
+		learnDictButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				selectedWordsGetter.getSelectedList().clear();
+				for (String s : savedDictionaries.showWordsInSelectedDict(getWordToAddFromList())) {
+					selectedWordsGetter.getSelectedList().add(s);
+				}
+				new LearnWindow(dictionary, selectedWordsGetter, listWords).open();
+				savedDictShell.close();
 			}
 		});
 
@@ -92,7 +127,11 @@ public class SavedDictWindow {
 			public void widgetSelected(SelectionEvent e) {
 				listOfDict.setVisible(true);
 				wordsInSavedDict.setVisible(false);
+				delDictButton.setEnabled(true);
+				showWordsButton.setEnabled(true);
+				learnDictButton.setEnabled(true);
 				wordsInSavedDict.removeAll();
+
 			}
 		});
 
@@ -101,9 +140,9 @@ public class SavedDictWindow {
 		refreshButton.setText("Refresh");
 		refreshButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				// как то сделать refresh
-				listOfDict.update();
+			public void widgetSelected(SelectionEvent e) {			
+				savedDictShell.close();
+				new SavedDictWindow(savedDictionaries, selectedWordsGetter).open();
 			}
 		});
 

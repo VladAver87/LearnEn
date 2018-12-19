@@ -11,15 +11,17 @@ import swt.project.db.WordsDAO;
 import swt.project.utils.Utils;
 
 public class Dictionary implements IDictionary {
-
+	
+	public static Dictionary dictionary = new Dictionary(DBConnector.dbconnector, WordsDAO.exchangeWithDB);
 	private Map<String, String> dict;
 	private Map<String, String> supportDict;
-	private WordsDAO exchangeWithDB;
+	private WordsDAO exchangeWithDB = WordsDAO.exchangeWithDB;
+
 	
-	public Dictionary(DBConnector dbconnector, WordsDAO exchangeWithDB) {
+	private Dictionary(DBConnector dbconnector, WordsDAO exchangeWithDB) {
 		this.dict = exchangeWithDB.load();
 		this.supportDict = putWordsToSupportDict();
-		this.exchangeWithDB = exchangeWithDB;
+
 	}
 	
 	private Map<String, String> putWordsToSupportDict() {

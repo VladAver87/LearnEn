@@ -17,9 +17,9 @@ import swt.project.utils.SavedDictionaries;
 public class MainWindow {
 
 	private final Shell shell;
-	private DBConnector dbconnector = new DBConnector();
-	private WordsDAO exchangeWithDB = new WordsDAO(dbconnector);
-	private Dictionary dictionary = new Dictionary(dbconnector, exchangeWithDB);
+	private DBConnector dbconnector = DBConnector.dbconnector;
+	private WordsDAO exchangeWithDB = WordsDAO.exchangeWithDB;
+	private Dictionary dictionary = Dictionary.dictionary;
 	private SavedDictionaries savedDictionaries = new SavedDictionaries(exchangeWithDB);
 
 	public MainWindow(Shell shell) {
@@ -66,5 +66,6 @@ public class MainWindow {
 		setButtons();
 		setLabels();
 		dbconnector.getConnectProperties(shell);
+		dbconnector.tryConnectFromDB(shell);
 	}
 }

@@ -17,12 +17,12 @@ public class AddWordWindow {
 
 	private Shell addWordshell = new Shell(SWT.CLOSE);
 	private ListWindow listWords;
-	private Dictionary dictionary;
+	private Dictionary dictionary = Dictionary.dictionary;
 	private MessageBox messageBox;
 
 	public AddWordWindow(ListWindow listWords, Dictionary dictionary) {
 		this.listWords = listWords;
-		this.dictionary = dictionary;
+
 	}
 	
 

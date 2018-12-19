@@ -19,12 +19,13 @@ import org.slf4j.LoggerFactory;
 
 public class WordsDAO implements IWordsDAO {
 	
-	private DBConnector dbconnector;
+	public static WordsDAO exchangeWithDB = new WordsDAO(DBConnector.dbconnector);
+	private DBConnector dbconnector = DBConnector.dbconnector;
 	private final Logger log = LoggerFactory.getLogger(WordsDAO.class);
 	private Shell dbErrorShell = new Shell();
 	
-	public WordsDAO (DBConnector dbconnector) {
-		this.dbconnector = dbconnector;
+	private WordsDAO (DBConnector dbconnector) {
+
 	}
 
 

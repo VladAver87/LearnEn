@@ -14,13 +14,16 @@ import org.slf4j.LoggerFactory;
 
 
 public class DBConnector {
+	
+	public static DBConnector dbconnector = new DBConnector();
 	private String url;
 	private String username;
 	private String password;
+	private String driver;
 	private Shell connectShell = new Shell();
 	private final Logger log = LoggerFactory.getLogger(DBConnector.class);
 	
-	public DBConnector() {
+	private DBConnector() {
 		getConnectProperties(connectShell);
 	}
 	
@@ -55,8 +58,12 @@ public class DBConnector {
 		this.url = props.getProperty("jdbc.url");
 		this.username = props.getProperty("jdbc.username");
 		this.password = props.getProperty("jdbc.password");
-		String driver = props.getProperty("jdbc.driver");
-
+		this.driver = props.getProperty("jdbc.driver");
+		
+	}
+	
+	public void tryConnectFromDB(Shell shell) {
+		
 		if (driver != null) {
 			try {
 				Class.forName(driver);
