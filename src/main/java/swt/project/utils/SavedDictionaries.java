@@ -1,44 +1,43 @@
 package swt.project.utils;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
-import swt.project.db.WordsDAO;
+import swt.project.db.ISavedDictionariesDAO;
+import swt.project.db.SavedDictionariesDAO;
 
-public class SavedDictionaries {
+public class SavedDictionaries implements ISavedDictionariesDAO {
 	private List<String> savedDicts = new ArrayList<>();
-	private WordsDAO exchangeWithDB;
+	private SavedDictionariesDAO savedDictionariesDAO = SavedDictionariesDAO.savedDictionariesDAO;
 	
-	public SavedDictionaries(WordsDAO exchangeWithDB) {
-		this.savedDicts = exchangeWithDB.loadSavedDicts();
-		this.exchangeWithDB = exchangeWithDB;
+	public SavedDictionaries(SavedDictionariesDAO savedDictionariesDAO) {
+		this.savedDicts = savedDictionariesDAO.loadSavedDicts();
 		
 	}
 
-	public void addToListSavedDicts(String name) {
-		savedDicts.add(name);
+	@Override
+	public void addToBDSavedDicts(String name, ArrayList<String> words) throws Exception {
+		if (!savedDicts.contains(name))
+		{
+		savedDicts.add(name);		
+		savedDictionariesDAO.putToDBSavedDicts(name, words);	
+		}
+		else 
+		{
+			throw new Exception();
+		}
 
 	}
-	
-	public void addToBDSavedDicts(String name) {
-		exchangeWithDB.putToDBsavedDicts(name);
-
-	}
-	
-	public void addToBDSavedDicts(String name, String word) {
-		exchangeWithDB.putToDBwordsForSavedDicts(name, word);
-
-	}
-	
+	@Override
 	public void removeFromDBSavedDict(String savedDict) {
-		exchangeWithDB.delFromSavedDictDB(savedDict);
+		savedDictionariesDAO.delFromSavedDictDB(savedDict);
 
 	}
-	
+	@Override
 	public List<String> showWordsInSelectedDict(String name) {
-		return exchangeWithDB.loadWordsFromSavedDict(name);
+		return savedDictionariesDAO.loadWordsFromSavedDict(name);
 	}
-	
 	
 	public List<String> showSavedDicts() {
 		return savedDicts;

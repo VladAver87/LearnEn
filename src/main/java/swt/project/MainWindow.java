@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import swt.project.db.DBConnector;
-import swt.project.db.WordsDAO;
+import swt.project.db.SavedDictionariesDAO;
 import swt.project.dictionary.Dictionary;
 import swt.project.utils.SavedDictionaries;
 
@@ -18,9 +18,9 @@ public class MainWindow {
 
 	private final Shell shell;
 	private DBConnector dbconnector = DBConnector.dbconnector;
-	private WordsDAO exchangeWithDB = WordsDAO.exchangeWithDB;
 	private Dictionary dictionary = Dictionary.dictionary;
-	private SavedDictionaries savedDictionaries = new SavedDictionaries(exchangeWithDB);
+	private SavedDictionariesDAO savedDictionariesDAO = SavedDictionariesDAO.savedDictionariesDAO;
+	private SavedDictionaries savedDictionaries = new SavedDictionaries(savedDictionariesDAO);
 
 	public MainWindow(Shell shell) {
 		this.shell = shell;

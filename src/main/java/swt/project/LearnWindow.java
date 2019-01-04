@@ -1,5 +1,7 @@
 package swt.project;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -7,7 +9,6 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
@@ -16,7 +17,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import swt.project.dictionary.Dictionary;
-import swt.project.utils.SelectedWordsGetter;
 
 
 public class LearnWindow {
@@ -24,13 +24,10 @@ public class LearnWindow {
 	private Dictionary dictionary = Dictionary.dictionary;
 	private int counterAllWords;
 	private int counterRightAnswer;
-	private SelectedWordsGetter selectedWordsGetter;
-	private ListWindow listWords;
+	private ArrayList<String> selectedWords;
 	
-	public LearnWindow(Dictionary dictionary, SelectedWordsGetter selectedWordsGetter, ListWindow listWords) {
-
-		this.selectedWordsGetter = selectedWordsGetter;
-		this.listWords = listWords;
+	public LearnWindow(Dictionary dictionary, ArrayList<String> selectedWords) {
+		this.selectedWords = selectedWords;
 	}	
 	
 	
@@ -67,7 +64,7 @@ public class LearnWindow {
 		countSumLabel.setLocation(300, 20);
 		countSumLabel.setSize(50, 30);
 		countSumLabel.setFont(learnWindowLabelFont);
-		countSumLabel.setText(String.valueOf(selectedWordsGetter.getSelectedList().size()));	
+		countSumLabel.setText(String.valueOf(selectedWords.size()));	
 		
 
 		Text translateWord = new Text(learnWindowShell, SWT.BORDER);
@@ -93,7 +90,7 @@ public class LearnWindow {
 				showResultButton.setVisible(false);
 				MessageBox messageBox = new MessageBox(learnWindowShell);
 				messageBox.setMessage("You have" + " " + counterRightAnswer + " " 
-					+ "of" + " " + String.valueOf(selectedWordsGetter.getSelectedList().size()) + " " + "right answers" );				
+					+ "of" + " " + String.valueOf(selectedWords.size()) + " " + "right answers" );				
 				messageBox.open();
 			}
 		});
@@ -111,10 +108,10 @@ public class LearnWindow {
 				}
 				counterAllWords = counterAllWords + 1;
 				translateWord.setFocus();
-				if (counterAllWords < selectedWordsGetter.getSelectedList().size())      
+				if (counterAllWords < selectedWords.size())      
 				{
 					countLabel.setText(String.valueOf(counterAllWords + 1));
-					engWord.setText(selectedWordsGetter.getSelectedList().get(counterAllWords));
+					engWord.setText(selectedWords.get(counterAllWords));
 				}
 					else 
 				{
@@ -137,7 +134,7 @@ public class LearnWindow {
 			public void widgetSelected(SelectionEvent e) {
 				counterAllWords = 0;
 				counterRightAnswer = 0;
-				engWord.setText(selectedWordsGetter.getSelectedList().get(counterAllWords));
+				engWord.setText(selectedWords.get(counterAllWords));
 				translateWord.setEnabled(true);
 				translateWord.setFocus();
 				startButton.setEnabled(false);

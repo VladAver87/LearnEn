@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import swt.project.dictionary.Dictionary;
 import swt.project.utils.SavedDictionaries;
-import swt.project.utils.SelectedWordsGetter;
 import swt.project.utils.Utils;
 
 public class ListWindow {
@@ -25,19 +24,28 @@ public class ListWindow {
 	private Shell listshell = new Shell(SWT.CLOSE);
 	private List listWords = new List(listshell, SWT.MULTI | SWT.V_SCROLL);
 	private Dictionary dictionary = Dictionary.dictionary;
-	private SelectedWordsGetter selectedWordsGetter;
 	private SavedDictionaries savedDictionaries;
-	private SavedDictWindow savedDictWindow;
+
 
 	public ListWindow(Dictionary dictionary, SavedDictionaries savedDictionaries) {
 		this.savedDictionaries = savedDictionaries;
-		selectedWordsGetter = new SelectedWordsGetter(this, dictionary, savedDictWindow, savedDictionaries);
 		
 	}
 
 	public List getListWords() {
 		return listWords;
 	}
+	
+	public ArrayList<String> getSelectedWords() {
+		ArrayList<String> selectedWordsList = new ArrayList<>();
+		selectedItems = listWords.getSelectionIndices();			
+		for (int i = 0 ; i < selectedItems.length; i++) {			
+			String wordToPut = listWords.getItem(selectedItems[i]);		
+			String tmp = dictionary.getWordToDel(wordToPut);
+			selectedWordsList.add(tmp);	
+			}
+		return selectedWordsList;
+	} 
 
 	private void wordsFromDictToList(List listWords) {
 		if (listWords != null) {
@@ -126,8 +134,7 @@ public class ListWindow {
 		learnSelectedButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				selectedWordsGetter.getSelectedWordsFromList();
-				new LearnWindow(dictionary, selectedWordsGetter, ListWindow.this).open();
+				new LearnWindow(dictionary, getSelectedWords()).open();
 				listshell.setVisible(false);
 			}
 		});
@@ -158,7 +165,7 @@ public class ListWindow {
 						return;
 					}
 				}
-				new SavedDictWindow(savedDictionaries, selectedWordsGetter).open();
+				new SavedDictWindow(savedDictionaries).open();
 			}
 		});
 
@@ -177,7 +184,7 @@ public class ListWindow {
 						return;
 					}
 				}
-				new SaveDictDialogWindow(savedDictionaries, selectedWordsGetter).open();
+				new SaveDictDialogWindow(savedDictionaries, ListWindow.this).open();
 			
 			}
 		});			

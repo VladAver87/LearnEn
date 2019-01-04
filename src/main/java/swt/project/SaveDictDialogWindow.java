@@ -1,6 +1,5 @@
 package swt.project;
 
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -12,22 +11,18 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import swt.project.utils.SavedDictionaries;
-import swt.project.utils.SelectedWordsGetter;
-
 
 public class SaveDictDialogWindow {
-	
-	private Shell SaveDictDialogShell = new Shell(SWT.APPLICATION_MODAL|SWT.CLOSE);
+
+	private Shell SaveDictDialogShell = new Shell(SWT.APPLICATION_MODAL | SWT.CLOSE);
 	private SavedDictionaries savedDictionaries;
-	private SelectedWordsGetter selectedWordsGetter;
-	
-	
-	public SaveDictDialogWindow(SavedDictionaries savedDictionaries, SelectedWordsGetter selectedWordsGetter) {
+	private ListWindow listWindow;
+
+	public SaveDictDialogWindow(SavedDictionaries savedDictionaries, ListWindow listWindow) {
 		this.savedDictionaries = savedDictionaries;
-		this.selectedWordsGetter = selectedWordsGetter;
-		
+		this.listWindow = listWindow;
 	}
-	
+
 	private void init() {
 		Button saveButton = new Button(SaveDictDialogShell, SWT.PUSH);
 		Button cancelButton = new Button(SaveDictDialogShell, SWT.PUSH);
@@ -42,45 +37,36 @@ public class SaveDictDialogWindow {
 				dictName.setText("");
 			}
 		});
-		
+
 		saveButton.setSize(110, 30);
 		saveButton.setLocation(20, 70);
 		saveButton.setText("Save");
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {	
-				
-				if (savedDictionaries.showSavedDicts().contains(dictName.getText())) {
+			public void widgetSelected(SelectionEvent e) {
+
+				try {
+					savedDictionaries.addToBDSavedDicts(dictName.getText(), listWindow.getSelectedWords());
+					SaveDictDialogShell.close();
+				} catch (Exception e1) {
 					MessageBox messageBox = new MessageBox(SaveDictDialogShell);
 					messageBox.setMessage("this name is busy");
 					messageBox.open();
-					
-				}else 
-				{				
-					selectedWordsGetter.getSelectedWordsFromList();				
-					savedDictionaries.addToListSavedDicts(dictName.getText());
-					savedDictionaries.addToBDSavedDicts(dictName.getText());
-					for (String s : selectedWordsGetter.getSelectedList()){
-					savedDictionaries.addToBDSavedDicts(dictName.getText(), s);
-				}
-					SaveDictDialogShell.close();
-				}
-				
-				
+				}			
 			}
-		});		
-		
+		});
+
 		cancelButton.setSize(110, 30);
 		cancelButton.setLocation(160, 70);
 		cancelButton.setText("Cancel");
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {	
+			public void widgetSelected(SelectionEvent e) {
 				SaveDictDialogShell.close();
 			}
-		});		
+		});
 	}
-	
+
 	public void open() {
 		SaveDictDialogShell.setData("savedDictsDialog");
 		SaveDictDialogShell.setText("Set name to save dictionary");

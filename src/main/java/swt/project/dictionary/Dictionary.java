@@ -12,14 +12,14 @@ import swt.project.utils.Utils;
 
 public class Dictionary implements IDictionary {
 	
-	public static Dictionary dictionary = new Dictionary(DBConnector.dbconnector, WordsDAO.exchangeWithDB);
+	public static Dictionary dictionary = new Dictionary(DBConnector.dbconnector, WordsDAO.wordsDAO);
 	private Map<String, String> dict;
 	private Map<String, String> supportDict;
-	private WordsDAO exchangeWithDB = WordsDAO.exchangeWithDB;
+	private WordsDAO wordsDAO = WordsDAO.wordsDAO;
 
 	
-	private Dictionary(DBConnector dbconnector, WordsDAO exchangeWithDB) {
-		this.dict = exchangeWithDB.load();
+	private Dictionary(DBConnector dbconnector, WordsDAO wordsDAO) {
+		this.dict = wordsDAO.load();
 		this.supportDict = putWordsToSupportDict();
 
 	}
@@ -41,14 +41,14 @@ public class Dictionary implements IDictionary {
 	public void addWord(String word, String translate) {
 		dict.put(word, translate);
 		supportDict.put(Utils.concatString(word, translate) , word);
-		exchangeWithDB.putToDB(word, translate);
+		wordsDAO.putToDB(word, translate);
 	}
 
 	@Override
 	public void removeWord(String word) {
 		dict.remove(word);
 		supportDict.values().remove(word);
-		exchangeWithDB.delFromDB(word);
+		wordsDAO.delFromDB(word);
 	}
 	
 	@Override
