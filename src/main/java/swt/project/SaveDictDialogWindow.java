@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import swt.project.users.User;
 import swt.project.utils.SavedDictionaries;
 
 public class SaveDictDialogWindow {
@@ -17,10 +18,12 @@ public class SaveDictDialogWindow {
 	private Shell SaveDictDialogShell = new Shell(SWT.APPLICATION_MODAL | SWT.CLOSE);
 	private SavedDictionaries savedDictionaries;
 	private ListWindow listWindow;
+	private User user;
 
-	public SaveDictDialogWindow(SavedDictionaries savedDictionaries, ListWindow listWindow) {
+	public SaveDictDialogWindow(SavedDictionaries savedDictionaries, ListWindow listWindow, User user) {
 		this.savedDictionaries = savedDictionaries;
 		this.listWindow = listWindow;
+		this.user = user;
 	}
 
 	private void init() {
@@ -46,7 +49,7 @@ public class SaveDictDialogWindow {
 			public void widgetSelected(SelectionEvent e) {
 
 				try {
-					savedDictionaries.addToBDSavedDicts(dictName.getText(), listWindow.getSelectedWords());
+					savedDictionaries.addToBDSavedDicts(user.getUserName(), dictName.getText(), listWindow.getSelectedWords());
 					SaveDictDialogShell.close();
 				} catch (Exception e1) {
 					MessageBox messageBox = new MessageBox(SaveDictDialogShell);

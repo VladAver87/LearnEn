@@ -24,15 +24,16 @@ public class SavedDictionariesDAO {
 
 	}
 
-	public void putToDBSavedDicts(String dictName, ArrayList<String> wordsList) {
+	public void putToDBSavedDicts(String user, String dictName, ArrayList<String> wordsList) {
 
 		try (Connection connect = DriverManager.getConnection(dbconnector.getUrl(), dbconnector.getUsername(),
 				dbconnector.getPassword())) {
 			connect.setAutoCommit(false);
-			String addDict = "INSERT INTO saved_dicts (name) VALUES (?)";
+			String addDict = "INSERT INTO saved_dicts (name, login) VALUES (?, ?)";
 			String addWordsToDict = "INSERT INTO dict_saved_dicts (name, word) VALUES (?, ?)";
 			try (PreparedStatement st1 = connect.prepareStatement(addDict)) {
 				st1.setString(1, dictName);
+				st1.setString(2, user);
 				st1.execute();
 				log.info("new dict is Sucssesfuly added", dictName);
 				PreparedStatement st2 = connect.prepareStatement(addWordsToDict);
@@ -41,8 +42,8 @@ public class SavedDictionariesDAO {
 					st2.setString(2, s);
 					st2.execute();				
 				}
-				log.info("new words to saved Dict is Sucssesfuly added", dictName);
 				connect.commit();
+				log.info("new words to saved Dict is Sucssesfuly added", dictName);
 			} catch (SQLException ex) {
 				connect.rollback();
 				log.error("add to saved Dict word error", ex);
@@ -73,13 +74,13 @@ public class SavedDictionariesDAO {
 		}
 	}
 
-	public List<String> loadSavedDicts() {
+	public List<String> loadSavedDicts(String user) {
 		List<String> savedDict = new ArrayList<>();
 
 		try (Connection connect = DriverManager.getConnection(dbconnector.getUrl(), dbconnector.getUsername(),
 				dbconnector.getPassword())) {
 			Statement st = connect.createStatement();
-			ResultSet res = st.executeQuery("SELECT name FROM saved_dicts");
+			ResultSet res = st.executeQuery("SELECT name FROM saved_dicts WHERE login = '"+ user +"'");
 			while (res.next()) {
 				savedDict.add(res.getString("name"));
 			}

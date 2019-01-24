@@ -12,16 +12,16 @@ public class SavedDictionaries implements ISavedDictionariesDAO {
 	private SavedDictionariesDAO savedDictionariesDAO = SavedDictionariesDAO.savedDictionariesDAO;
 	
 	public SavedDictionaries(SavedDictionariesDAO savedDictionariesDAO) {
-		this.savedDicts = savedDictionariesDAO.loadSavedDicts();
+		
 		
 	}
 
 	@Override
-	public void addToBDSavedDicts(String name, ArrayList<String> words) throws Exception {
+	public void addToBDSavedDicts(String user, String name, ArrayList<String> words) throws Exception {
 		if (!savedDicts.contains(name))
 		{
 		savedDicts.add(name);		
-		savedDictionariesDAO.putToDBSavedDicts(name, words);	
+		savedDictionariesDAO.putToDBSavedDicts(user, name, words);	
 		}
 		else 
 		{
@@ -39,8 +39,13 @@ public class SavedDictionaries implements ISavedDictionariesDAO {
 		return savedDictionariesDAO.loadWordsFromSavedDict(name);
 	}
 	
-	public List<String> showSavedDicts() {
+	public List<String> getSavedDicts() {
 		return savedDicts;
+		
+	}
+	
+	public void setSavedDicts(List<String> savedDicts) {
+		this.savedDicts = savedDicts;
 		
 	}
 }

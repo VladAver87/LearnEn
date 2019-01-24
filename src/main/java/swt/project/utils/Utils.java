@@ -1,4 +1,5 @@
 package swt.project.utils;
+import org.apache.commons.codec.digest.DigestUtils;
 
 public final class Utils {
 
@@ -10,6 +11,10 @@ public final class Utils {
 		String result = word + " - " + translate;
 
 		return result;
+	}
+	
+	public static String passCoding(String password) {
+		return DigestUtils.md5Hex(password);
 	}
 	
 }

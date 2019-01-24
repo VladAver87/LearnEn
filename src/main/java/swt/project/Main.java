@@ -10,9 +10,9 @@ public class Main {
 		Display localDisplay = new Display();
 		Shell shell = new Shell(localDisplay, SWT.CLOSE);
 		MainWindow mainWindow = new MainWindow(shell);
-		mainWindow.init();
+		mainWindow.open();
 		shell.setText("LearnWords");
-		shell.setSize(400, 250);
+		shell.setSize(400, 300);
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!localDisplay.readAndDispatch()) {

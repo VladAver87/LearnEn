@@ -36,7 +36,7 @@ public class LearnWindow {
 		learnWindowShell.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
-//				listWords.getListWords().getShell().open();
+
 			}
 		});
 		
@@ -104,7 +104,11 @@ public class LearnWindow {
 			public void widgetSelected(SelectionEvent e) {				
 				String temp = dictionary.showAllWords().get(engWord.getText());	
 				if (temp.equalsIgnoreCase(translateWord.getText())) {
+					dictionary.uptadeAnswer(engWord.getText(), true);
 					counterRightAnswer++;
+				}else 
+				{
+					dictionary.uptadeAnswer(engWord.getText(), false);
 				}
 				counterAllWords = counterAllWords + 1;
 				translateWord.setFocus();

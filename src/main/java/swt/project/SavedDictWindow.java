@@ -41,7 +41,7 @@ public class SavedDictWindow {
 	}
 
 	private void putWordsToListOfDict() {
-		for (String s : savedDictionaries.showSavedDicts()) {
+		for (String s : savedDictionaries.getSavedDicts()) {
 			listOfDict.add(s);
 		}
 	}
@@ -106,6 +106,7 @@ public class SavedDictWindow {
 				delDictButton.setEnabled(false);
 				showWordsButton.setEnabled(false);
 				learnDictButton.setEnabled(false);
+				backButton.setEnabled(true);
 			}
 		});
 
@@ -124,6 +125,7 @@ public class SavedDictWindow {
 		backButton.setSize(50, 40);
 		backButton.setLocation(10, 5);
 		backButton.setText("Refresh");
+		backButton.setEnabled(false);
 		backButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

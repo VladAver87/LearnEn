@@ -8,6 +8,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import swt.project.dictionary.Dictionary;
@@ -64,10 +65,13 @@ public class AddWordWindow {
 						messageBox.setMessage("this one is already add");
 						messageBox.open();
 						
-					}else 
-					{				
-						listWords.getListWords().add(Utils.concatString(addWord.getText(), addTranslate.getText()));
+					}
+					else 
+					{		
 						dictionary.addWord(addWord.getText(), addTranslate.getText());
+						TableItem item = new TableItem(listWords.getListWords(), SWT.BORDER);
+						item.setText(Utils.concatString(addWord.getText(), addTranslate.getText()));
+						listWords.getListWords().update();
 						addWord.setFocus();
 						addTranslate.setText(" ");
 					}

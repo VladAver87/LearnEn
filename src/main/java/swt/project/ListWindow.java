@@ -6,14 +6,17 @@ import java.util.Map.Entry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 
 import swt.project.dictionary.Dictionary;
+import swt.project.users.User;
 import swt.project.utils.SavedDictionaries;
 import swt.project.utils.Utils;
 
@@ -22,54 +25,65 @@ public class ListWindow {
 	private int[] selectedItems;
 	private int selectionIndex;
 	private Shell listshell = new Shell(SWT.CLOSE);
-	private List listWords = new List(listshell, SWT.MULTI | SWT.V_SCROLL);
+	private Table listWords = new Table(listshell, SWT.MULTI | SWT.V_SCROLL);
 	private Dictionary dictionary = Dictionary.dictionary;
 	private SavedDictionaries savedDictionaries;
+	private Color wrongAnswerColor = new Color(null, 255, 0, 0);
+	private Color rightAnswerColor = new Color(null, 000, 0, 0);
+	private User user;
 
-
-	public ListWindow(Dictionary dictionary, SavedDictionaries savedDictionaries) {
+	public ListWindow(Dictionary dictionary, SavedDictionaries savedDictionaries, User user) {
 		this.savedDictionaries = savedDictionaries;
-		
+		this.user = user;
 	}
 
-	public List getListWords() {
+	public Table getListWords() {
 		return listWords;
 	}
-	
+
 	public ArrayList<String> getSelectedWords() {
 		ArrayList<String> selectedWordsList = new ArrayList<>();
-		selectedItems = listWords.getSelectionIndices();			
-		for (int i = 0 ; i < selectedItems.length; i++) {			
-			String wordToPut = listWords.getItem(selectedItems[i]);		
-			String tmp = dictionary.getWordToDel(wordToPut);
-			selectedWordsList.add(tmp);	
-			}
+		selectedItems = listWords.getSelectionIndices();
+		for (int i = 0; i < selectedItems.length; i++) {
+			TableItem wordToPut = listWords.getItem(selectedItems[i]);
+			String tmp = dictionary.getWordToDel(wordToPut.getText());
+			selectedWordsList.add(tmp);
+		}
 		return selectedWordsList;
-	} 
+	}
 
-	private void wordsFromDictToList(List listWords) {
+	private void wordsFromDictToList(Table listWords) {
 		if (listWords != null) {
 			for (Entry<String, String> entry : dictionary.showAllWords().entrySet()) {
-				listWords.add(Utils.concatString(entry.getKey(), entry.getValue()));
+				TableItem item = new TableItem(listWords, SWT.BORDER);
+				item.setText(Utils.concatString(entry.getKey(), entry.getValue()));
+				if (!dictionary.getAnswer(entry.getKey())) {
+					item.setForeground(wrongAnswerColor);
+				}
+				else 
+				{
+					item.setForeground(rightAnswerColor);
+				}
 			}
 		}
 	}
 
+
 	private void removeFromDict() {
 		selectedItems = listWords.getSelectionIndices();
 		for (int i = 0; i < selectedItems.length; i++) {
-			String wordToDel = listWords.getItem(selectedItems[i]);
-			String tmp = dictionary.getWordToDel(wordToDel);
+			TableItem wordToDel = listWords.getItem(selectedItems[i]);
+			String tmp = dictionary.getWordToDel(wordToDel.getText());
 			dictionary.removeWord(tmp);
 		}
 		listWords.remove(selectedItems);
 	}
 
-	public ArrayList<String> allWordsInListWindow(List listWords) {
+	public ArrayList<String> allWordsInListWindow(Table listWords) {
 		ArrayList<String> list = new ArrayList<>();
-		String[] allwords = listWords.getItems();
-		for (String s : allwords) {
-			String word = dictionary.getWordToDel(s);
+		TableItem[] allwords = listWords.getItems();
+		for (TableItem s : allwords) {
+			String word = dictionary.getWordToDel(s.getText());
 			list.add(word);
 		}
 
@@ -85,7 +99,8 @@ public class ListWindow {
 		Button learnSelectedButton = new Button(listshell, SWT.PUSH);
 		Button selectAllButton = new Button(listshell, SWT.PUSH);
 		Font listWordsfont = new Font(null, "Arial", 14, SWT.NORMAL);
-		listWords.setBounds(5, 50, 390, 595);
+		listWords.setSize(390, 595);
+		listWords.setLocation(5, 50);
 		listWords.setFont(listWordsfont);
 		listWords.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -135,7 +150,7 @@ public class ListWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				new LearnWindow(dictionary, getSelectedWords()).open();
-				listshell.setVisible(false);
+				listshell.close();
 			}
 		});
 
@@ -175,7 +190,7 @@ public class ListWindow {
 		saveDictButton.setText("Save selected to new Dictionary");
 		saveDictButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {	
+			public void widgetSelected(SelectionEvent e) {
 				Shell[] shells = Display.getCurrent().getShells();
 				for (Shell shell : shells) {
 					String data = (String) shell.getData();
@@ -184,10 +199,10 @@ public class ListWindow {
 						return;
 					}
 				}
-				new SaveDictDialogWindow(savedDictionaries, ListWindow.this).open();
-			
+				new SaveDictDialogWindow(savedDictionaries, ListWindow.this, user).open();
+
 			}
-		});			
+		});
 
 	}
 
