@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 
 import swt.project.dictionary.Dictionary;
+import swt.project.users.User;
 import swt.project.utils.SavedDictionaries;
 
 public class SavedDictWindow {
@@ -21,10 +22,11 @@ public class SavedDictWindow {
 	private SavedDictionaries savedDictionaries;
 	private int selectedItems;
 	private Dictionary dictionary = Dictionary.dictionary;
+	private User user;
 
-	public SavedDictWindow(SavedDictionaries savedDictionaries) {
+	public SavedDictWindow(SavedDictionaries savedDictionaries, User user) {
 		this.savedDictionaries = savedDictionaries;
-
+		this.user = user;
 	}
 
 	public Shell getSavedDictShell() {
@@ -117,7 +119,7 @@ public class SavedDictWindow {
 		learnDictButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new LearnWindow(dictionary, getSelectedWords()).open();
+				new LearnWindow(dictionary, getSelectedWords(), user).open();
 				savedDictShell.close();
 			}
 		});
@@ -146,7 +148,7 @@ public class SavedDictWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				savedDictShell.close();
-				new SavedDictWindow(savedDictionaries).open();
+				new SavedDictWindow(savedDictionaries, user).open();
 			}
 		});
 

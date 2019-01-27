@@ -127,7 +127,7 @@ public class ListWindow {
 						return;
 					}
 				}
-				new AddWordWindow(ListWindow.this, dictionary).open();
+				new AddWordWindow(ListWindow.this, dictionary, user).open();
 			}
 		});
 
@@ -149,7 +149,7 @@ public class ListWindow {
 		learnSelectedButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new LearnWindow(dictionary, getSelectedWords()).open();
+				new LearnWindow(dictionary, getSelectedWords(), user).open();
 				listshell.close();
 			}
 		});
@@ -180,7 +180,7 @@ public class ListWindow {
 						return;
 					}
 				}
-				new SavedDictWindow(savedDictionaries).open();
+				new SavedDictWindow(savedDictionaries, user).open();
 			}
 		});
 

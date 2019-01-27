@@ -22,7 +22,6 @@ public class Dictionary implements IDictionary {
 	private Dictionary(DBConnector dbconnector, WordsDAO wordsDAO) {
 		this.dict = wordsDAO.load();
 		this.supportDict = putWordsToSupportDict();
-		this.answer = wordsDAO.loadAnswer();
 
 	}
 	
@@ -40,20 +39,26 @@ public class Dictionary implements IDictionary {
 	}
 	
 	public boolean getAnswer(String word) {
-		return answer.get(word);
-		
+		if (answer.get(word) == null) {
+			return false;
+		}
+			return answer.get(word);		
 	}
 	
-	public void uptadeAnswer(String word, Boolean ans) {
-		wordsDAO.putAnswerToDB(word, ans);
+	public void setAnswer(Map<String, Boolean> answer) {
+		this.answer = answer;
+	}
+	
+	public void uptadeAnswer(String user, String word, Boolean ans) {
+		wordsDAO.putAnswerToDB(user, word, ans);
 		answer.put(word, ans);
 	}
 	
 	@Override
-	public void addWord(String word, String translate) {
+	public void addWord(String user,String word, String translate) {
 		dict.put(word, translate);
 		supportDict.put(Utils.concatString(word, translate) , word);
-		wordsDAO.putToDB(word, translate);
+		wordsDAO.putToDB(user, word, translate);
 		answer.put(word, false);
 	}
 

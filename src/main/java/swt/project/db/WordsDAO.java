@@ -26,17 +26,23 @@ public class WordsDAO implements IWordsDAO {
 	}
 
 	@Override
-	public void putToDB(String word, String translate) {
+	public void putToDB(String user, String word, String translate) {
 
 		try (Connection connect = DriverManager.getConnection(dbconnector.getUrl(), dbconnector.getUsername(),
 				dbconnector.getPassword())) {
-			String sqlQuery = "INSERT INTO DICT_TABLE (word, translate, answer) VALUES (?, ?, ?)";
+			String sqlQuery = "INSERT INTO DICT_TABLE (word, translate) VALUES (?, ?)";
+			String sqlQuery2 = "INSERT INTO user_islearned (login, word, islearned) VALUES (?, ?, ?)";
 			PreparedStatement st = connect.prepareStatement(sqlQuery);
 			st.setString(1, word);
 			st.setString(2, translate);
-			st.setBoolean(3, false);
 			st.execute();
 			log.info("Word {} add to dict", word);
+			PreparedStatement st2 = connect.prepareStatement(sqlQuery2);
+			st2.setString(1, user);
+			st2.setString(2, word);
+			st2.setBoolean(3, false);
+			st2.execute();
+			log.info("flag false to {} add to user_islearned", word);
 		} catch (SQLException ex) {
 			log.error("add word error", ex);
 			MessageBox messageBox = new MessageBox(dbErrorShell);
@@ -45,14 +51,15 @@ public class WordsDAO implements IWordsDAO {
 		}
 	}
 
-	public void putAnswerToDB(String word, Boolean answer) {
+	public void putAnswerToDB(String user, String word, Boolean answer) {
 
 		try (Connection connect = DriverManager.getConnection(dbconnector.getUrl(), dbconnector.getUsername(),
 				dbconnector.getPassword())) {
-			String sqlQuery = "UPDATE dict_table SET answer = ? WHERE word = ?";
+			String sqlQuery = "UPDATE user_islearned SET islearned = ? WHERE word = ? AND login = ?";
 			PreparedStatement st = connect.prepareStatement(sqlQuery);
 			st.setBoolean(1, answer);
 			st.setString(2, word);
+			st.setString(3, user);
 			st.execute();
 			log.info("Answer to {} add to dict", word);
 		} catch (SQLException ex) {
@@ -85,15 +92,13 @@ public class WordsDAO implements IWordsDAO {
 	@Override
 	public Map<String, String> load() {
 		Map<String, String> dict = new HashMap<String, String>();
-		Map<String, Boolean> answer = new HashMap<String, Boolean>();
 
 		try (Connection connect = DriverManager.getConnection(dbconnector.getUrl(), dbconnector.getUsername(),
 				dbconnector.getPassword())) {
 			Statement st = connect.createStatement();
-			ResultSet res = st.executeQuery("SELECT word, translate, answer FROM DICT_TABLE");
+			ResultSet res = st.executeQuery("SELECT word, translate FROM DICT_TABLE");
 			while (res.next()) {
 				dict.put(res.getString("word"), res.getString("translate"));
-				answer.put(res.getString("word"), res.getBoolean("answer"));
 			}
 			log.info("Dictionary is load");
 		} catch (SQLException ex) {
@@ -102,15 +107,15 @@ public class WordsDAO implements IWordsDAO {
 		return dict;
 	}
 	
-	public Map<String, Boolean> loadAnswer() {
+	public Map<String, Boolean> loadAnswer(String user) {
 		Map<String, Boolean> answer = new HashMap<String, Boolean>();
 
 		try (Connection connect = DriverManager.getConnection(dbconnector.getUrl(), dbconnector.getUsername(),
 				dbconnector.getPassword())) {
 			Statement st = connect.createStatement();
-			ResultSet res = st.executeQuery("SELECT word, answer FROM DICT_TABLE");
+			ResultSet res = st.executeQuery("SELECT word, islearned FROM user_islearned WHERE login = '"+ user +"'");
 			while (res.next()) {
-				answer.put(res.getString("word"), res.getBoolean("answer"));
+				answer.put(res.getString("word"), res.getBoolean("islearned"));
 			}
 			log.info("AnswerMap is load");
 		} catch (SQLException ex) {

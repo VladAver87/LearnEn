@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import swt.project.dictionary.Dictionary;
+import swt.project.users.User;
 
 
 public class LearnWindow {
@@ -25,9 +26,11 @@ public class LearnWindow {
 	private int counterAllWords;
 	private int counterRightAnswer;
 	private ArrayList<String> selectedWords;
+	private User user;
 	
-	public LearnWindow(Dictionary dictionary, ArrayList<String> selectedWords) {
+	public LearnWindow(Dictionary dictionary, ArrayList<String> selectedWords, User user) {
 		this.selectedWords = selectedWords;
+		this.user = user;
 	}	
 	
 	
@@ -104,11 +107,11 @@ public class LearnWindow {
 			public void widgetSelected(SelectionEvent e) {				
 				String temp = dictionary.showAllWords().get(engWord.getText());	
 				if (temp.equalsIgnoreCase(translateWord.getText())) {
-					dictionary.uptadeAnswer(engWord.getText(), true);
+					dictionary.uptadeAnswer(user.getUserName(), engWord.getText(), true);
 					counterRightAnswer++;
 				}else 
 				{
-					dictionary.uptadeAnswer(engWord.getText(), false);
+					dictionary.uptadeAnswer(user.getUserName(), engWord.getText(), false);
 				}
 				counterAllWords = counterAllWords + 1;
 				translateWord.setFocus();

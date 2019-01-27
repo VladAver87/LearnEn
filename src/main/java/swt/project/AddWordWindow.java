@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import swt.project.dictionary.Dictionary;
+import swt.project.users.User;
 import swt.project.utils.Utils;
 
 public class AddWordWindow {
@@ -20,10 +21,11 @@ public class AddWordWindow {
 	private ListWindow listWords;
 	private Dictionary dictionary = Dictionary.dictionary;
 	private MessageBox messageBox;
+	private User user;
 
-	public AddWordWindow(ListWindow listWords, Dictionary dictionary) {
+	public AddWordWindow(ListWindow listWords, Dictionary dictionary, User user) {
 		this.listWords = listWords;
-
+		this.user = user;
 	}
 	
 
@@ -68,7 +70,7 @@ public class AddWordWindow {
 					}
 					else 
 					{		
-						dictionary.addWord(addWord.getText(), addTranslate.getText());
+						dictionary.addWord(user.getUserName(), addWord.getText(), addTranslate.getText());
 						TableItem item = new TableItem(listWords.getListWords(), SWT.BORDER);
 						item.setText(Utils.concatString(addWord.getText(), addTranslate.getText()));
 						listWords.getListWords().update();

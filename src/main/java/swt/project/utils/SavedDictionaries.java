@@ -32,7 +32,7 @@ public class SavedDictionaries implements ISavedDictionariesDAO {
 	@Override
 	public void removeFromDBSavedDict(String savedDict) {
 		savedDictionariesDAO.delFromSavedDictDB(savedDict);
-
+		savedDicts.remove(savedDict);
 	}
 	@Override
 	public List<String> showWordsInSelectedDict(String name) {

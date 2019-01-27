@@ -14,18 +14,18 @@ import org.slf4j.LoggerFactory;
 
 import swt.project.utils.Utils;
 
-public class UserDAO implements IUserDAO{
-	public static UserDAO userDAO= new UserDAO (DBConnector.dbconnector);
+public class UserDAO implements IUserDAO {
+	public static UserDAO userDAO = new UserDAO(DBConnector.dbconnector);
 	private DBConnector dbconnector = DBConnector.dbconnector;
 	private final Logger log = LoggerFactory.getLogger(UserDAO.class);
 	private Shell userShell = new Shell();
-	
+
 	private UserDAO(DBConnector dbconnector) {
-		
+
 	}
 
 	@Override
-	public void put(String login, String password) {
+	public void add(String login, String password) {
 		try (Connection connect = DriverManager.getConnection(dbconnector.getUrl(), dbconnector.getUsername(),
 				dbconnector.getPassword())) {
 			String sqlQuery = "INSERT INTO users (login, password) VALUES (?, ?)";
@@ -43,7 +43,7 @@ public class UserDAO implements IUserDAO{
 			messageBox.setMessage("Unable to add new user from DataBase");
 			messageBox.open();
 		}
-		
+
 	}
 
 	@Override
@@ -52,11 +52,17 @@ public class UserDAO implements IUserDAO{
 		try (Connection connect = DriverManager.getConnection(dbconnector.getUrl(), dbconnector.getUsername(),
 				dbconnector.getPassword())) {
 			Statement st = connect.createStatement();
-			ResultSet res = st.executeQuery("SELECT * FROM users WHERE login = '" + login + "'AND password = '" + Utils.passCoding(password) + "'");
+			ResultSet res = st.executeQuery("SELECT * FROM users WHERE login = '" + login + "'AND password = '"
+					+ Utils.passCoding(password) + "'");
 			if (res.next()) {
 				result = true;
+				log.info("password check successful");
+			} else {
+				MessageBox messageBox = new MessageBox(userShell);
+				messageBox.setMessage("Incorrect login/password or user does not exist!");
+				messageBox.open();
 			}
-			log.info("password check successful");
+
 		} catch (SQLException ex) {
 			log.error("password check failed", ex);
 		}
